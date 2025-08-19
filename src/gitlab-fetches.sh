@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
+VERSION="1.0.0"
+
 set -euo pipefail
 
-VERSION="1.0.0"
 GITLAB_TOKEN="${GITLAB_TOKEN:-}"
 PROJECT_URLS=()
 
