@@ -1,0 +1,74 @@
+{
+  "name": "gitlab-fetches",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "test:docker": "docker build --load --target test-env --tag gitlab-fetches-test . && docker run --rm gitlab-fetches-test"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "semantic-release": "^24.2.0",
+    "semantic-release-replace-plugin": "^1.2.7"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": false
+        }
+      ],
+      [
+        "semantic-release-replace-plugin",
+        {
+          "replacements": [
+            {
+              "files": [
+                "src/gitlab-fetches.sh"
+              ],
+              "from": "VERSION=\".*\"",
+              "to": "VERSION=\"${nextRelease.version}\"",
+              "results": [
+                {
+                  "file": "src/gitlab-fetches.sh",
+                  "hasChanged": true,
+                  "numMatches": 1,
+                  "numReplacements": 1
+                }
+              ],
+              "countMatches": true
+            }
+          ]
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "CHANGELOG.md",
+            "package.json",
+            "package-lock.json",
+            "src/gitlab-fetches.sh"
+          ]
+        }
+      ],
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            {
+              "path": "src/gitlab-fetches.sh",
+              "name": "gitlab-fetches",
+              "label": "gitlab-fetches (${nextRelease.gitTag})"
+            }
+          ]
+        }
+      ]
+    ]
+  }
+}
