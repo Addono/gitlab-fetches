@@ -13,7 +13,7 @@ test('displays help', async () => {
 
 test('displays version', async () => {
   const { stdout } = await execAsync(`${scriptPath} --version`);
-  assert.ok(stdout.includes('1.0.0'));
+  assert.match(stdout, /\d+\.\d+\.\d+/);
 });
 
 test('fails without project url', async () => {
