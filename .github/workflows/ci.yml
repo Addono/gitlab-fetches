@@ -25,6 +25,33 @@ jobs:
           GITLAB_E2E_TOKEN: ${{ secrets.GITLAB_E2E_TOKEN }}
         run: docker run --rm -e GITLAB_E2E_TOKEN gitlab-fetches-test
 
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs:
+      - test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        run: npx semantic-release
+    
   publish:
     name: Publish
     runs-on: ubuntu-latest
@@ -57,27 +84,3 @@ jobs:
             ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.VERSION }}
             ghcr.io/${{ github.repository }}:latest
 
-  release:
-    name: Release
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    needs:
-      - publish
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: ".nvmrc"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
