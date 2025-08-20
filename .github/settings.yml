@@ -4,13 +4,13 @@ repository:
   name: gitlab-fetches
 
   # A short description of the repository that will show up on GitHub
-  description: A shell script to fetch artifacts from GitLab CI/CD pipelines.
+  description: A shell script to get insights into the amount of fetches for a GitLab repository
 
   # A link where more about this repository can be found
   homepage: https://github.com/Addono/gitlab-fetches
 
   # A comma-separated list of topics to set on the repository
-  topics: gitlab, ci-cd, artifacts, shell-script, automation
+  topics: gitlab, ci-cd, shell-script, automation, docker
 
   # Either `true` to make the repository private, or `false` to make it public.
   private: false
@@ -22,7 +22,7 @@ repository:
   has_wiki: false
 
   # Either `true` to enable downloads for this repository, `false` to disable them.
-  has_downloads: false
+  has_downloads: true
 
   # Updates the default branch for this repository.
   default_branch: main
