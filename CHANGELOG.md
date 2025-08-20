@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/Addono/gitlab-fetches/compare/v1.0.0...v1.0.1) (2025-08-20)
+
+
+### Bug Fixes
+
+* **script:** refactor json handling to prevent parse errors ([b1a6902](https://github.com/Addono/gitlab-fetches/commit/b1a6902f05b44a8ce148591d95f61c179a93f691))
+
 # 1.0.0 (2025-08-20)
 
 
