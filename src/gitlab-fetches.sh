@@ -64,12 +64,22 @@ FINAL_JSON="{}"
 SUCCESS_COUNT=0
 
 for URL in "${PROJECT_URLS[@]}"; do
-  PROJECT_PATH=$(echo "${URL%/}" | sed 's|^https://gitlab.com/||')
+  # Remove trailing slash from URL
+  URL="${URL%/}"
+
+  # Extract hostname and project path from URL
+  HOSTNAME=$(echo "$URL" | sed -E 's|https?://([^/]+)/.*|\1|')
+  PROJECT_PATH=$(echo "$URL" | sed -E 's|https?://[^/]+/(.*)|\1|')
+
+  # URL-encode the project path for the API request
   PROJECT_ID=$(echo "$PROJECT_PATH" | sed 's|/|%2F|g')
+
+  # Construct the API URL for the specific GitLab instance
+  API_URL="https://${HOSTNAME}/api/v4/projects/${PROJECT_ID}/events"
 
   BODY_FILE=$(mktemp)
 
-  HTTP_CODE=$(curl --silent --output "$BODY_FILE" --write-out "%{http_code}" --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.com/api/v4/projects/$PROJECT_ID/events")
+  HTTP_CODE=$(curl --silent --output "$BODY_FILE" --write-out "%{http_code}" --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "$API_URL")
 
   if [ "$HTTP_CODE" -ne 200 ]; then
     ERROR_MESSAGE=$(jq -r .message < "$BODY_FILE" 2>/dev/null) || ERROR_MESSAGE="Failed with HTTP code $HTTP_CODE"
