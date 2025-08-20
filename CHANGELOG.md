@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/Addono/gitlab-fetches/compare/v1.0.1...v1.1.0) (2025-08-20)
+
+
+### Features
+
+* **script:** add support for self-hosted gitlab instances ([3dece27](https://github.com/Addono/gitlab-fetches/commit/3dece27c8e479d477b8cfd0c85de00b8851cd0e9))
+
 ## [1.0.1](https://github.com/Addono/gitlab-fetches/compare/v1.0.0...v1.0.1) (2025-08-20)
 
 
