@@ -41,7 +41,7 @@
   </p>
 </p>
 
-`./src/gitlab-fetches.sh` is a script designed to fetch historical data from the GitLab API. It is [sh](https://en.wikipedia.org/wiki/Bourne_shell) and [alpine](https://alpinelinux.org/) compatible. This project is a rewrite of the original [Eficode/wait-for](https://github.com/Eficode/wait-for) repository, repurposed for a new use case.
+`./src/gitlab-fetches.sh` is a script designed to fetch historical data from the GitLab API. It is [sh](https://en.wikipedia.org/wiki/Bourne_shell) and [alpine](https://alpinelinux.org/) compatible.
 
 The easiest way to get started using this tool is to include the `src/gitlab-fetches.sh` file as part of your project. Then call this script as part of any automation script.
 
