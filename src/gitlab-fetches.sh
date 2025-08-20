@@ -67,22 +67,26 @@ for URL in "${PROJECT_URLS[@]}"; do
   PROJECT_PATH=$(echo "${URL%/}" | sed 's|^https://gitlab.com/||')
   PROJECT_ID=$(echo "$PROJECT_PATH" | sed 's|/|%2F|g')
 
-  RESPONSE=$(curl --silent --write-out "\n%{http_code}" --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.com/api/v4/projects/$PROJECT_ID/events")
-  HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
-  BODY=$(echo "$RESPONSE" | sed '$d')
+  BODY_FILE=$(mktemp)
+
+  HTTP_CODE=$(curl --silent --output "$BODY_FILE" --write-out "%{http_code}" --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.com/api/v4/projects/$PROJECT_ID/events")
 
   if [ "$HTTP_CODE" -ne 200 ]; then
-    echo "Error fetching data for project $PROJECT_PATH: $(echo "$BODY" | jq -r .message)" >&2
+    ERROR_MESSAGE=$(jq -r .message < "$BODY_FILE" 2>/dev/null) || ERROR_MESSAGE="Failed with HTTP code $HTTP_CODE"
+    echo "Error fetching data for project $PROJECT_PATH: $ERROR_MESSAGE" >&2
+    rm -f "$BODY_FILE"
     continue # Skip to the next project
   fi
 
   # Use jq to process the data for the current project
-  PROJECT_JSON=$(echo "$BODY" | jq --arg project_path "$PROJECT_PATH" '{
+  PROJECT_JSON=$(jq --arg project_path "$PROJECT_PATH" '{
     ($project_path): {
-      historical: (group_by(.created_at | split("T")[0]) | map({date: .[0].created_at | split("T")[0], fetches: length})),
-      total: length
+      historical: (map(select(type == "object" and has("created_at"))) | group_by(.created_at | split("T")[0]) | map({date: .[0].created_at | split("T")[0], fetches: length})),
+      total: (map(select(type == "object" and has("created_at"))) | length)
     }
-  }')
+  }' < "$BODY_FILE")
+
+  rm -f "$BODY_FILE"
 
   # Merge the current project's JSON into the final result
   FINAL_JSON=$(jq -n --argjson current "$FINAL_JSON" --argjson new "$PROJECT_JSON" '$current * $new')
