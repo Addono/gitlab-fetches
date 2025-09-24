@@ -152,7 +152,7 @@ Make sure `bash`, `curl`, and `jq` are installed in your environment before runn
 This tool is released under the MIT license. It's derived from:
 
 <details>
-<summary><a href="https://github.com/eficode/wait-for">wait-for</a>: MIT license, 2027 Eficode Oy</summary>
+<summary><a href="https://github.com/eficode/wait-for">wait-for</a>: MIT license, 2017 Eficode Oy</summary>
 The MIT License (MIT)
 
 Copyright (c) 2017 Eficode Oy
