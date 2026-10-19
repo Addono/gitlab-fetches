@@ -7,7 +7,7 @@
     "test:docker": "docker build --load --target test-env --tag gitlab-fetches-test . && docker run --rm gitlab-fetches-test"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/changelog": "^7.0.0",
     "@semantic-release/git": "^10.0.1",
     "semantic-release": "^25.0.2",
     "semantic-release-replace-plugin": "^1.2.7"
